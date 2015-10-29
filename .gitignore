@@ -1,5 +1,6 @@
 Runtime/
 Public/upload
+package/
 
 # Windows image file caches
 Thumbs.db
@@ -45,4 +46,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-
