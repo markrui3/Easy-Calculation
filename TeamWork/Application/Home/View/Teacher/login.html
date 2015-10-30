@@ -1,0 +1,61 @@
+<include file="Index/header"/>
+<header class="am-g my-head">
+    <div class="am-u-sm-12 am-article">
+        <br>
+        <h1 class="am-article-title">教师登录</h1>
+        <br>
+    </div>
+</header>
+<body>
+    <div class="am-g">
+        <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+            <hr>
+            <form method="post" class="am-form">
+                <label>用户名</label>
+                <input type="text" name="username" id="username">
+                <br>
+                <label>密码</label>
+                <input type="password" name="password" id="password"> 
+                <br>
+                <input type="submit" name="login-btn" id="login-btn" value="登 录" class="am-btn am-btn-primary am-u-sm-centered">
+            </form>
+            <hr>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function($) {
+            $("#login-btn").on('click', function(argument) {
+                var username = $("#username").val();
+                var password = $("#password").val();
+                if (username == '' || password == '') {
+                    return;
+                }
+                $.ajax({
+                    url: '{:U("/Home/Teacher/checkLogin")}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        username: username,
+                        password: password
+                    }
+                })
+                    .done(function(response) {
+                        console.log("ajax seccess");
+                        if (response.status== 'success') {
+                            window.location.href = '{:U("/Home/Teacher/index")}';
+                        } else {
+                            alert(response.message);
+                        }
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+
+            });
+        });
+        </script>
+</body>
+
