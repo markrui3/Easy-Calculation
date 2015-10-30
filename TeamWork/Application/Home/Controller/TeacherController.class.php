@@ -8,9 +8,9 @@ class TeacherController extends Controller {
 
     public function checkLogin(){
         $data['username'] = I('param.username');
-        $data['password'] = I('param.password');
+        $data['pwd'] = I('param.password');
 
-        if(!$data['username'] || !$data['password']){
+        if(!$data['username'] || !$data['pwd']){
             $result['status'] = 'miss info';
             $result['message'] = '缺少有效信息';
 
@@ -18,7 +18,7 @@ class TeacherController extends Controller {
             exit;
         }
 
-        $Dao = M('user');
+        $Dao = M('teacher');
         $r = $Dao->where($data)->find();
 
         // var_dump($Dao);
