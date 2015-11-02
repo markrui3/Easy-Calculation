@@ -55,7 +55,21 @@
                 <li><a href="#">考试</a></li>
             </ul>
 
-            
+            <if condition="session('teacher')">
+                <div class="am-topbar-right">
+                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                        <span class="am-icon-user"></span>
+                        <a href="#"> {:I('session.teacher')['username']}</a>
+                    </button>
+                </div>
+            <else />
+                <div class="am-topbar-right">
+                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                        <span class="am-icon-pencil"></span>
+                        <a href="{:U("/Home/Teacher/login")}"> 登录</a>
+                    </button>
+                </div>
+            </if>
         </div>
     </div>
 </header>
