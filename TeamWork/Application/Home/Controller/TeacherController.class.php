@@ -6,6 +6,22 @@ class TeacherController extends Controller {
        $this->display('teacher/index');
     }
 
+    public function getStudentList(){
+        $teacher_id = I('param.teacher_id');
+        $Dao = M('student');
+        $result = $Dao->where("teacher_id=$teacher_id")->select();
+        $data = array();
+        foreach($result as $r){
+            $d = array();
+            $d['student_id'] = $r['student_id'];
+            $d['name'] = $r['name'];
+            $d['avescore'] = intval($r['avescore']);
+            $d['info'] = 'user page link'; 
+            array_push($data,$d);
+        }
+        echo json_encode($data);
+    }
+
     public function checkLogin(){
         $data['username'] = I('param.username');
         $data['pwd'] = I('param.password');
