@@ -42,7 +42,7 @@
 </style>
 <header class="am-topbar am-topbar-fixed-top">
     <div class="am-container">
-        <h1 class="am-topbar-brand">教师模块 </h1>
+        <h1 class="am-topbar-brand"> 学生模块</h1>
         <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
             <span class="am-sr-only">导航切换</span>
             <span class="am-icon-bars"></span>
@@ -50,23 +50,22 @@
         <div class="am-collapse am-topbar-collapse" id="collapse-head">
             <ul class="am-nav am-nav-pills am-topbar-nav">
                 <li class="am-active"><a href="#">首页</a></li>
-                <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
                 <li><a href="#">习题</a></li>
                 <li><a href="#">考试</a></li>
             </ul>
 
-            <if condition="session('teacher')">
+            <if condition="session('student')">
                 <div class="am-topbar-right">
                     <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                         <span class="am-icon-user"></span>
-                        <a href="#"> {:I('session.teacher')['username']}</a>
+                        <a href="#"> {:I('session.student')['username']}</a>
                     </button>
                 </div>
             <else />
                 <div class="am-topbar-right">
                     <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                         <span class="am-icon-pencil"></span>
-                        <a href="{:U("/Home/Teacher/login")}"> 登录</a>
+                        <a href="{:U("/Home/Student/login")}"> 登录</a>
                     </button>
                 </div>
             </if>

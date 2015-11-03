@@ -1,0 +1,62 @@
+<include file="Index/header"/>
+<style>
+    .list-title {
+      text-align: center;
+      padding: 30px;
+    }
+</style>
+
+<header class="am-topbar am-topbar-fixed-top">
+    <div class="am-container">
+        <h1 class="am-topbar-brand">教师模块 </h1>
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
+            <span class="am-sr-only">导航切换</span>
+            <span class="am-icon-bars"></span>
+        </button>
+        <div class="am-collapse am-topbar-collapse" id="collapse-head">
+            <ul class="am-nav am-nav-pills am-topbar-nav">
+                <li><a href="#">首页</a></li>
+                <li class="am-active"><a href="#">学生</a></li>
+                <li><a href="#">习题</a></li>
+                <li><a href="#">考试</a></li>
+            </ul>
+
+            <if condition="session('teacher')">
+                <div class="am-topbar-right">
+                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                        <span class="am-icon-user"></span>
+                        <a href="#"> {:I('session.teacher')['username']}</a>
+                    </button>
+                </div>
+            <else />
+                <div class="am-topbar-right">
+                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                        <span class="am-icon-pencil"></span>
+                        <a href="{:U("/Home/Teacher/login")}"> 登录</a>
+                    </button>
+                </div>
+            </if>
+        </div>
+    </div>
+</header>
+<div class="list-title">
+    <h1>学生信息列表</h1>
+</div>
+<div class="am-g">
+    <div class="am-u-sm-12">
+        <table class="am-table am-table-bd am-table-striped admin-content-table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>姓 名</th><th>平均成绩</th><th>详细信息</th>                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>老猫</td>
+                <td>84</td>
+                <td><a href="#">详细信息</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

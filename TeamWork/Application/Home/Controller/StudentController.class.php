@@ -1,9 +1,9 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-class TeacherController extends Controller {
+class StudentController extends Controller {
     public function index(){
-       $this->display('teacher/index');
+       $this->display('student/index');
     }
 
     public function checkLogin(){
@@ -18,13 +18,13 @@ class TeacherController extends Controller {
             exit;
         }
 
-        $Dao = M('teacher');
+        $Dao = M('student');
         $r = $Dao->where($data)->find();
 
         // var_dump($Dao);
 
         if($r){
-            session('teacher', $r);
+            session('student', $r);
 
             $result['status'] = 'success';
             $result['message'] = '登录成功';
