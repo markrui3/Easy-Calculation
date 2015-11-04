@@ -16,10 +16,18 @@ class TeacherController extends Controller {
             $d['student_id'] = $r['student_id'];
             $d['name'] = $r['name'];
             $d['avescore'] = intval($r['avescore']);
-            $d['info'] = 'user page link'; 
+            $d['info'] = $r['student_id']; 
             array_push($data,$d);
         }
         echo json_encode($data);
+    }
+    
+    public function getStudentInfo(){
+        $student_id = I('param.student_id');
+        $Dao = M('stu_ques_id');
+        $result = $Dao->where("student_id=$student_id")->select();
+
+        echo json_encode($result);
     }
 
     public function checkLogin(){
@@ -51,5 +59,6 @@ class TeacherController extends Controller {
 
         echo json_encode($result);
     }
+
 }
 
