@@ -51,8 +51,8 @@
             <ul class="am-nav am-nav-pills am-topbar-nav">
                 <li class="am-active"><a href="#">首页</a></li>
                 <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
-                <li><a href="#">习题</a></li>
-                <li><a href="#">考试</a></li>
+                <li><a href="{:U("Home/Teacher/questionList")}">习题</a></li>
+                <li><a href="{:U("Home/Teacher/examList")}">考试</a></li>
             </ul>
 
             <if condition="session('teacher')">

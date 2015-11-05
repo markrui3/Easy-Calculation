@@ -18,8 +18,8 @@
             <div class="am-collapse am-topbar-collapse" id="collapse-head">
                 <ul class="am-nav am-nav-pills am-topbar-nav">
                     <li><a href="{:U("Home/Teacher/index")}">首页</a></li>
-                    <li class="am-active"><a href="#">学生</a></li>
-                    <li><a href="{:U("Home/Teacher/questionList")}">习题</a></li>
+                    <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
+                    <li class="am-active"><a href="#">习题</a></li>
                     <li><a href="{:U("Home/Teacher/examList")}">考试</a></li>
                 </ul>
 
@@ -42,31 +42,30 @@
         </div>
     </header>
     <div class="list-title">
-        <h1>学生信息列表</h1>
+        <h1>试题列表</h1>
     </div>
-    <div class="am-g am-u-lg-centered">
-        <table id="studentList" class="stripe">
+    <div class="am-g am-u-lg-10 am-u-lg-centered">
+        <table id="questionList" class="stripe">
             <thead>
                 <tr>
-                    <th>学生学号</th>
-                    <th>学生姓名</th>
-                    <th>平均得分</th>
-                    <th>学生详情</th>
+                    <th>试题编号</th>
+                    <th>试题名称</th>
+                    <th>试题内容</th>
                 </tr>
             </thead>
         </table>
     </div>
     <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd">学生历次考试成绩
+            <div class="am-modal-hd">试题内容
                 <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
             </div>
-            <div class="am-modal-bd" id="studentInfoContent">
-                <table id="studentInfoTable" class="stripe">
+            <div class="am-modal-bd" id="questionContent">
+                <table id="questionContentTable" class="stripe">
                     <thead>
                         <tr>
-                            <th>试题编号</th>
-                            <th>学生得分</th>
+                            <th>题目</th>
+                            <th>答案</th>
                         </tr>
                     </thead>
                 </table>
@@ -79,7 +78,7 @@
     $(document).ready(function($) {
 
         $.ajax({
-            url: '{:U("/Home/Teacher/getStudentList")}',
+            url: '{:U("/Home/Teacher/getQuestionList")}',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -87,13 +86,12 @@
             }
         })
             .done(function(response) {
-                $('#studentList').DataTable( {
+                $('#questionList').DataTable( {
                     data: response,
                     columns: [
-                        { data: 'student_id' },
+                        { data: 'question_id' },
                         { data: 'name' },
-                        { data: 'avescore' },
-                        { data: 'info' }
+                        { data: 'question_content' }
                     ],
                     columnDefs: [
                         <!-- { -->
@@ -104,7 +102,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" data-am-modal="{target: \'#my-modal\'}" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + data + '</button>';
+                                return '<button type="button" data-am-modal="{target: \'#my-modal\'}" class="am-btn am-btn-primary" onclick="showQuestionContent(' + data + ')">' +  "试题内容" + '</button>';
                             }
                         }
                     ]
@@ -118,24 +116,27 @@
             });
     });
 
-    function getStudentInfo(student_id){
+    function showQuestionContent(data){
+
         $.ajax({
-            url: '{:U("/Home/Teacher/getStudentInfo")}',
+            url: '{:U("/Home/Teacher/getQuestionContent")}',
             type: 'POST',
             dataType: 'json',
             data: {
-                student_id: student_id
+                question_id: data
             }
         })
-            .done(function(response){
-                $('#studentInfoTable').DataTable({
+            .done(function(response) {
+                <!-- var content = JSON.parse(response); -->
+                console.log(response);
+                $('#questionContentTable').DataTable({
                     bDestroy: true,
                     paging: false,
                     searching: false,
                     data: response,
                     columns:[
-                        { data: 'question_id' },
-                        { data: 'score' }
+                        { data: 'text' },
+                        { data: 'answer' }
                     ]
                 });
             })

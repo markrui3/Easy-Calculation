@@ -30,6 +30,30 @@ class TeacherController extends Controller {
         echo json_encode($result);
     }
 
+    public function getQuestionList(){
+        $teacher_id = I('param.teacher_id');
+        $Dao = M('question');
+        $result = $Dao->where("teacher_id=$teacher_id")->select();
+        $data = array();
+        foreach($result as $r){
+            $d = array();
+            $d['question_id'] = $r['question_id'];
+            $d['name'] = $r['name'];
+            $d['question_content'] = $r['question_id'];
+            array_push($data,$d);
+        }
+
+        echo json_encode($data);
+    }
+
+    public function getQuestionContent(){
+        $question_id = I('param.question_id');
+        $Dao = M('question');
+        $result = $Dao->where("question_id=$question_id")->getField("question_content");
+
+        echo $result;
+    }
+
     public function checkLogin(){
         $data['username'] = I('param.username');
         $data['pwd'] = I('param.password');
