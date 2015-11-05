@@ -84,5 +84,32 @@ class TeacherController extends Controller {
         echo json_encode($result);
     }
 
+     public function getExamList(){
+        $teacher_id = I('param.teacher_id');
+        $Dao = M('exam');
+        $result = $Dao->where("teacher_id=$teacher_id")->select();
+        $data = array();
+        foreach($result as $r){
+            $d = array();
+            $d['exam_id'] = $r['exam_id'];
+            $d['name'] = $r['name'];
+            $d['question_id'] = $r['question_id'];
+            $d['spend_time'] = $r['spend_time'];
+            $d['info'] = $r['exam_id'];
+            array_push($data,$d);
+        }
+
+        echo json_encode($data);
+    }
+    
+    public function getExamInfo(){
+        $exam_id = I('param.exam_id');
+        $Dao = M('stu_exam');
+        $result = $Dao->where("exam_id=$exam_id")->select();
+
+        echo json_encode($result);
+    }
+
+
 }
 
