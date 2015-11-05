@@ -6,6 +6,12 @@
       text-align: center;
       padding: 20px;
     }
+    #questionList {
+      text-align: center;
+    }
+    th {
+      text-align: center;
+    }
 </style>
 <body>
     <header class="am-topbar am-topbar-fixed-top">
@@ -102,7 +108,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" data-am-modal="{target: \'#my-modal\'}" class="am-btn am-btn-primary" onclick="showQuestionContent(' + data + ')">' +  "试题内容" + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="showQuestionContent(' + data + ')">' +  "试题内容" + '</button>';
                             }
                         }
                     ]
@@ -126,7 +132,7 @@
                 question_id: data
             }
         })
-            .done(function(response) {
+            .success(function(response) {
                 <!-- var content = JSON.parse(response); -->
                 console.log(response);
                 $('#questionContentTable').DataTable({
@@ -139,6 +145,7 @@
                         { data: 'answer' }
                     ]
                 });
+                $("#my-modal").modal('open');
             })
             .fail(function() {
                 console.log("error");
