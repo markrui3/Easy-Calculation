@@ -1,0 +1,127 @@
+<include file="Index/header"/>
+<js href="__PUBLIC__/assets/js/react.js"/>
+<js href="__PUBLIC__/assets/js/react-dom.js"/>
+<js href="__PUBLIC__/assets/js/browser.js"/>
+<style>
+    h2,table,tr {
+      text-align: center;
+    }
+</style>
+<body>
+    <header class="am-topbar am-topbar-fixed-top">
+        <div class="am-container">
+            <h1 class="am-topbar-brand"> 学生模块</h1>
+            <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
+                <span class="am-sr-only">导航切换</span>
+                <span class="am-icon-bars"></span>
+            </button>
+            <div class="am-collapse am-topbar-collapse" id="collapse-head">
+                <ul class="am-nav am-nav-pills am-topbar-nav">
+                    <li><a href="{:U("Home/Student/index")}">首页</a></li>
+                    <li class="am-active"><a href="#">习题</a></li>
+                    <li><a href="{:U("Home/Student/examList")}">考试</a></li>
+                </ul>
+
+                <if condition="session('student')">
+                    <div class="am-topbar-right">
+                        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                            <span class="am-icon-user"></span>
+                            <a href="#"> {:I('session.student')['username']}</a>
+                        </button>
+                    </div>
+                <else />
+                    <div class="am-topbar-right">
+                        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                            <span class="am-icon-pencil"></span>
+                            <a href="{:U("/Home/Teacher/login")}"> 登录</a>
+                        </button>
+                    </div>
+                </if>
+            </div>
+        </div>
+    </header><br/>
+    <div class="am-panel am-panel-default">
+        <div class="am-panel-hd">
+            <h2 class="am-panel-title">第{:I("param.question_id")}号练习题</h2>
+        </div>
+        <div id="questionList">
+        </div>
+        <!-- <table class="am-table"> --> 
+        <!--     <tbody ></tbody> -->
+        <!-- </table> -->
+        <div class="am-panel-footer">
+            <hr/>
+        </div>
+    </div>
+</body>
+
+<script type="text/babel">
+    var QuestionItem = React.createClass({
+      getInitialState: function() {
+        return {answer: this.props.answer, result: "success"};
+      },
+      finishQuestion: function(event) {
+        if(event.target.value != this.state.answer){
+            this.setState({result: "danger"});
+        }            
+        else {
+            this.setState({result: "success"});
+        }
+      },
+      render: function() {
+        return (
+          <tr className="">
+              <td>
+                  <span className={"am-badge am-badge-" + this.state.result + " am-round"}>#</span>
+              </td>
+              <td>{this.props.text}</td>
+              <td>
+                 <input type="text" onBlur={this.finishQuestion}/>
+              </td>
+          </tr>
+        );
+      }
+    }); 
+
+    var QuestionTable = React.createClass({
+      getInitialState: function() {
+        return {data: [], question_id: this.props.question_id};
+      },
+      loadQuestionData: function() {
+          $.ajax({
+              url: '{:U("/Home/Student/getQuestionContent")}',
+              dataType: 'json',
+              type: 'POST',
+              data: {
+                  question_id: this.state.question_id
+              },
+              success: function(response) {
+                this.setState({data: response});
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error(status, err.toString());
+              }.bind(this)
+          });
+      },
+      componentDidMount: function() {
+        this.loadQuestionData();
+      },
+      render: function() {
+        return (
+          <table className="am-table">
+              <tbody>
+                  {this.state.data.map(function(d){
+                      return <QuestionItem text={d.text} answer={d.answer}/> 
+                  })}
+              </tbody>
+          </table>
+        );
+      }
+
+    });
+
+    ReactDOM.render(
+        <QuestionTable question_id="{:I('param.question_id')}"/>,
+        document.getElementById('questionList')
+    );
+</script>

@@ -1,7 +1,10 @@
 <include file="Index/header"/>
 <style>
+    .am-topbar-btn {
+      background: #1ABC9C;
+    }
     .get {
-      background: #1E5B94;
+      background: #1ABC9C;
       color: #fff;
       text-align: center;
       padding: 70px 0;
@@ -29,7 +32,7 @@
     }
 
     .detail-h3 {
-      color: #1f8dd6;
+      color: #1ABC9C;
     }
 
     .detail-p {
@@ -50,8 +53,8 @@
         <div class="am-collapse am-topbar-collapse" id="collapse-head">
             <ul class="am-nav am-nav-pills am-topbar-nav">
                 <li class="am-active"><a href="#">首页</a></li>
-                <li><a href="#">习题</a></li>
-                <li><a href="#">考试</a></li>
+                <li><a href="{:U("Home/Student/questionList")}">习题</a></li>
+                <li><a href="{:U("Home/Student/examList")}">考试</a></li>
             </ul>
 
             <if condition="session('student')">
