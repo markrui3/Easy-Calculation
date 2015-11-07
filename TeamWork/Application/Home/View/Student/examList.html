@@ -16,31 +16,30 @@
 <body>
     <header class="am-topbar am-topbar-fixed-top">
         <div class="am-container">
-            <h1 class="am-topbar-brand">教师模块 </h1>
+            <h1 class="am-topbar-brand">学生模块 </h1>
             <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
                 <span class="am-sr-only">导航切换</span>
                 <span class="am-icon-bars"></span>
             </button>
             <div class="am-collapse am-topbar-collapse" id="collapse-head">
                 <ul class="am-nav am-nav-pills am-topbar-nav">
-                    <li><a href="{:U("Home/Teacher/index")}">首页</a></li>
-                    <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
-                    <li><a href="{:U("Home/Teacher/questionList")}">试题</a></li>
+                    <li><a href="{:U("Home/Student/index")}">首页</a></li>
+                    <li><a href="{:U("Home/Student/questionList")}">试题</a></li>
                     <li class="am-active"><a href="#">考试</a></li>
                 </ul>
 
-                <if condition="session('teacher')">
+                <if condition="session('student')">
                     <div class="am-topbar-right">
                         <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                             <span class="am-icon-user"></span>
-                            <a href="#"> {:I('session.teacher')['username']}</a>
+                            <a href="#"> {:I('session.student')['username']}</a>
                         </button>
                     </div>
                 <else />
                     <div class="am-topbar-right">
                         <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                             <span class="am-icon-pencil"></span>
-                            <a href="{:U("/Home/Teacher/login")}"> 登录</a>
+                            <a href="{:U("/Home/Student/login")}"> 登录</a>
                         </button>
                     </div>
                 </if>
@@ -56,30 +55,12 @@
                 <tr>
                     <th>考试编号</th>
                     <th>考试名称</th>
-                    <th>考题编号</th>
                     <th>考试耗时</th>
+                    <th>实际耗时</th>
                     <th>学生成绩</th>
                 </tr>
             </thead>
         </table>
-    </div>
-    <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal">
-        <div class="am-modal-dialog">
-            <div class="am-modal-hd">本次考试得分情况
-                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-            </div>
-            <div class="am-modal-bd" id="studentInfoContent">
-                <table id="examInfoTable" class="stripe">
-                    <thead>
-                        <tr>
-                            <th>学生编号</th>
-                            <th>学生姓名</th>
-                            <th>学生得分</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
     </div>
 </body>
 
@@ -87,11 +68,11 @@
     $(document).ready(function($) {
 
         $.ajax({
-            url: '{:U("/Home/Teacher/getExamList")}',
+            url: '{:U("/Home/Student/getExamList")}',
             type: 'POST',
             dataType: 'json',
             data: {
-                teacher_id: '{:I("session.teacher")["teacher_id"]}'
+                student_id: '{:I("session.student")["student_id"]}'
             }
         })
             .done(function(response) {
@@ -100,22 +81,9 @@
                     columns: [
                         { data: 'exam_id' },
                         { data: 'name' },
-                        { data: 'question_id' },
                         { data: 'spend_time' },
-                        { data: 'info' }
-                    ],
-                    columnDefs: [
-                        <!-- { -->
-                        <!--     "targets": 0, -->
-                        <!--     "visible":false -->
-                        <!-- }, -->
-                        {
-                            "targets": -1,
-                            "data": null,
-                            "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="getExamInfo(' + data + ')">' +  "学生得分" + '</button>';
-                            }
-                        }
+                        { data: 'time_spent' },
+                        { data: 'score' }
                     ]
                 } );
             })
@@ -127,34 +95,4 @@
             });
     });
 
-    function getExamInfo(exam_id){
-        $.ajax({
-            url: '{:U("/Home/Teacher/getExamInfo")}',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                exam_id: exam_id
-            }
-        })
-            .done(function(response){
-                $('#examInfoTable').DataTable({
-                    bDestroy: true,
-                    paging: false,
-                    searching: false,
-                    data: response,
-                    columns:[
-                        { data: 'student_id' },
-                        { data: 'student_name' },
-                        { data: 'score' }
-                    ]
-                });
-                $("#my-modal").modal("open");
-            })
-            .fail(function() {
-                console.log("error");
-            })
-            .always(function() {
-                console.log("complete");
-            });
-    }
 </script>

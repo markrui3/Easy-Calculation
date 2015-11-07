@@ -29,6 +29,28 @@ class StudentController extends Controller {
 
         echo $result;
     }
+    
+    public function getExamList(){
+        $student_id= I('param.student_id');
+        $Dao1 = M('stu_exam');
+        $stu_exam_list = $Dao1->where("student_id=$student_id")->select();
+        $data = array();
+        foreach($stu_exam_list as $stu_exam){
+            $exam_id = $stu_exam['exam_id'];
+            $Dao2 = M('exam');
+            $r = $Dao2->where("exam_id=$exam_id AND status='finished'")->select();
+            $r = $r[0];
+            $d = array();
+            $d['exam_id'] = $r['exam_id'];
+            $d['name'] = $r['name'];
+            $d['spend_time'] = $r['spend_time'];
+            $d['time_spent'] = $stu_exam['time_spent'];
+            $d['score'] = $stu_exam['score'];
+            array_push($data,$d);
+        }
+
+        echo json_encode($data);
+    }
 
     public function checkLogin(){
         $data['username'] = I('param.username');
