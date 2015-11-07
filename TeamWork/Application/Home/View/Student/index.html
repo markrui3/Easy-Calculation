@@ -1,7 +1,10 @@
-<include file="Index/header"/>
+<include file="Index/studentheader"/>
 <style>
+    .am-topbar-btn {
+      background: #1ABC9C;
+    }
     .get {
-      background: #1E5B94;
+      background: #1ABC9C;
       color: #fff;
       text-align: center;
       padding: 70px 0;
@@ -29,7 +32,7 @@
     }
 
     .detail-h3 {
-      color: #1f8dd6;
+      color: #1ABC9C;
     }
 
     .detail-p {
@@ -40,38 +43,6 @@
       margin-bottom: 30px;
     }
 </style>
-<header class="am-topbar am-topbar-fixed-top">
-    <div class="am-container">
-        <h1 class="am-topbar-brand"> 学生模块</h1>
-        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
-            <span class="am-sr-only">导航切换</span>
-            <span class="am-icon-bars"></span>
-        </button>
-        <div class="am-collapse am-topbar-collapse" id="collapse-head">
-            <ul class="am-nav am-nav-pills am-topbar-nav">
-                <li class="am-active"><a href="#">首页</a></li>
-                <li><a href="#">习题</a></li>
-                <li><a href="#">考试</a></li>
-            </ul>
-
-            <if condition="session('student')">
-                <div class="am-topbar-right">
-                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
-                        <span class="am-icon-user"></span>
-                        <a href="#"> {:I('session.student')['username']}</a>
-                    </button>
-                </div>
-            <else />
-                <div class="am-topbar-right">
-                    <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
-                        <span class="am-icon-pencil"></span>
-                        <a href="{:U("/Home/Student/login")}"> 登录</a>
-                    </button>
-                </div>
-            </if>
-        </div>
-    </div>
-</header>
 <div class="get">
     <div class="am-g">
         <div class="am-u-lg-12">
@@ -158,3 +129,4 @@ function countDown(selector, second) {
 	}  
 }
 </script>
+<include file="Index/footer"/>

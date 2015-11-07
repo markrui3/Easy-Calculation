@@ -1,0 +1,98 @@
+<include file="Index/studentheader"/>
+<js href="__PUBLIC__/assets/js/react.js"/>
+<js href="__PUBLIC__/assets/js/react-dom.js"/>
+<js href="__PUBLIC__/assets/js/browser.js"/>
+<style>
+    h2,table,tr {
+      text-align: center;
+    }
+</style>
+<br/>
+    <div class="am-panel am-panel-default">
+        <div class="am-panel-hd">
+            <h2 class="am-panel-title">第{:I("param.question_id")}号练习题</h2>
+        </div>
+        <div id="questionList">
+        </div>
+        <!-- <table class="am-table"> --> 
+        <!--     <tbody ></tbody> -->
+        <!-- </table> -->
+        <div class="am-panel-footer">
+            <hr/>
+        </div>
+    </div>
+<include file="Index/footer"/>
+
+<script type="text/babel">
+    var QuestionItem = React.createClass({
+      getInitialState: function() {
+        return {answer: this.props.answer, result: "primary"};
+      },
+      finishQuestion: function(event) {
+        if(event.target.value == ''){
+            this.setState({result: "primary"});
+        }
+        else if(event.target.value != this.state.answer){
+            this.setState({result: "danger"});
+        }            
+        else {
+            this.setState({result: "success"});
+        }
+      },
+      render: function() {
+        return (
+          <tr className="">
+              <td>
+                  <span className={"am-badge am-badge-" + this.state.result + " am-round"}>#</span>
+              </td>
+              <td>{this.props.text}</td>
+              <td>
+                 <input type="text" onBlur={this.finishQuestion}/>
+              </td>
+          </tr>
+        );
+      }
+    }); 
+
+    var QuestionTable = React.createClass({
+      getInitialState: function() {
+        return {data: [], question_id: this.props.question_id};
+      },
+      loadQuestionData: function() {
+          $.ajax({
+              url: '{:U("/Home/Student/getQuestionContent")}',
+              dataType: 'json',
+              type: 'POST',
+              data: {
+                  question_id: this.state.question_id
+              },
+              success: function(response) {
+                this.setState({data: response});
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error(status, err.toString());
+              }.bind(this)
+          });
+      },
+      componentDidMount: function() {
+        this.loadQuestionData();
+      },
+      render: function() {
+        return (
+          <table className="am-table">
+              <tbody>
+                  {this.state.data.map(function(d,i){
+                      return <QuestionItem key={i} text={d.text} answer={d.answer}/> 
+                  })}
+              </tbody>
+          </table>
+        );
+      }
+
+    });
+
+    ReactDOM.render(
+        <QuestionTable question_id="{:I('param.question_id')}"/>,
+        document.getElementById('questionList')
+    );
+</script>

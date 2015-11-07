@@ -1,9 +1,12 @@
 <include file="Index/header"/>
+<style>
+    h1 {
+      padding: 40px 0; 
+    }
+</style>
 <header class="am-g my-head">
     <div class="am-u-sm-12 am-article">
-        <br>
-        <h1 class="am-article-title">教师登录</h1>
-        <br>
+        <h1 class="am-article-title">教师注册</h1>
     </div>
 </header>
 <body>
@@ -11,39 +14,48 @@
         <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
             <hr>
             <form class="am-form">
+                <label>姓名</label>
+                <input type="text" name="name" id="name">
                 <label>用户名</label>
                 <input type="text" name="username" id="username">
-                <br>
                 <label>密码</label>
                 <input type="password" name="password" id="password"> 
+                <label>确认密码</label>
+                <input type="password" name="password-confirm" id="password-confirm"> 
                 <br>
             </form>
-            <button name="login-btn" id="login-btn" class="am-btn am-btn-primary am-u-sm-centered">登录</button>
+            <button name="register-btn" id="register-btn" class="am-btn am-btn-primary am-u-sm-centered">确认注册</button>
             <hr>
         </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function($) {
-            $("#login-btn").on('click', function(argument) {
-                console.log("clicked");
+            $("#register-btn").on('click', function(argument) {
                 var username = $("#username").val();
                 var password = $("#password").val();
-                if (username == '' || password == '') {
+                var name = $("#name").val();
+                var password_confirm = $("#password-confirm").val();
+
+                if (name == '' || username == '' || password == '') {
+                    return;
+                } else if (password_confirm != password){
+                    alert('两次输入的密码不相同');
                     return;
                 }
                 $.ajax({
-                    url: '{:U("/Home/Teacher/checkLogin")}',
+                    url: '{:U("/Home/Teacher/checkRegister")}',
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         username: username,
-                        password: password
+                        password: password,
+                        name: name
                     }
                 })
                     .done(function(response) {
                         console.log("ajax success");
                         if (response.status== 'success') {
-                            window.location.href = '{:U("/Home/Teacher/index")}';
+                            window.location.href = '{:U("/Home/Teacher/login")}';
                         } else {
                             alert(response.message);
                         }
