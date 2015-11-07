@@ -53,5 +53,15 @@ class IndexController extends Controller {
         return $result;
     }
 
+    //入参、函数功能
+    public function xiehanglun(){
+        $data = I('param.');
+        $data['exam_id'] = I('param.exam_id', '');
+        $Model = M("question");
+        $r = $Model->add($data);
+        echo json_encode($data);
+        echo $Model->getLastSql();
+        echo json_encode($r);
+    }
 
 }
