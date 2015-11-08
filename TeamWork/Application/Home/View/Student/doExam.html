@@ -19,7 +19,15 @@
                 <ul class="am-nav am-nav-pills am-topbar-nav">
                     <li><a href="{:U("Home/Student/index")}">首页</a></li>
                     <li><a href="{:U("Home/Student/questionList")}">习题</a></li>
-                    <li class="am-active"><a href="#">考试</a></li>
+                    <li class="am-dropdown" data-am-dropdown>
+                        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                            考试 <span class="am-icon-caret-down"></span>
+                        </a>
+                        <ul class="am-dropdown-content">
+                            <li><a href="{:U("Home/Student/examList")}">已完成</a></li>
+                            <li><a href="{:U("Home/Student/processingExam")}">进行中</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <if condition="session('student')">
@@ -42,7 +50,7 @@
     </header><br/>
     <div class="am-panel am-panel-default">
         <div class="am-panel-hd">
-            <h2 class="am-panel-title">第{:I("param.exam_id")}号考试题</h2>
+            <h2 class="am-panel-title">考试</h2>
         </div>
         <div id="examList">
         </div>
@@ -96,7 +104,7 @@
 
     var ExamTable = React.createClass({
       getInitialState: function() {
-        return {data: [], exam_id: this.props.exam_id, sum: 0};
+        return {data: [], question_id: this.props.question_id, sum: 0};
       },
       loadQuestionData: function() {
           $.ajax({
@@ -104,7 +112,7 @@
               dataType: 'json',
               type: 'POST',
               data: {
-                  question_id: this.state.exam_id
+                  question_id: this.state.question_id
               },
               success: function(response) {
                 this.setState({data: response});
@@ -121,8 +129,26 @@
         this.loadQuestionData();
       },
       submitExam: function() {
-        var result = parseFloat(this.state.sum) / parseFloat(this.state.data.length) * 100;
-        $("#score-content").text(result);
+        var student_id = "{:I('session.student')['student_id']}";
+        var exam_id = "{:I('param.exam_id')}";
+        var score = parseFloat(this.state.sum) / parseFloat(this.state.data.length) * 100;
+          $.ajax({
+              url: '{:U("/Home/Student/submitExam")}',
+              dataType: 'json',
+              type: 'POST',
+              data: {
+                student_id: student_id,
+                exam_id: exam_id,
+                score: score
+              },
+              success: function(response) {
+                console.log(response.message.toString());
+              }.bind(this),
+              error: function(xhr, status, err) {
+                console.error(status, err.toString());
+              }.bind(this)
+          });
+        $("#score-content").text(score);
         $("#my-modal").modal("open");
       },
       render: function() {
@@ -144,7 +170,7 @@
     });
 
     ReactDOM.render(
-        <ExamTable exam_id="{:I('param.exam_id')}"/>,
+        <ExamTable question_id ="{:I('param.question_id')}"/>,
         document.getElementById('examList')
     );
 </script>

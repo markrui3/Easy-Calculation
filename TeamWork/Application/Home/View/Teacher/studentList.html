@@ -56,7 +56,6 @@
                 <tr>
                     <th>学生学号</th>
                     <th>学生姓名</th>
-                    <th>平均得分</th>
                     <th>学生详情</th>
                 </tr>
             </thead>
@@ -98,7 +97,6 @@
                     columns: [
                         { data: 'student_id' },
                         { data: 'name' },
-                        { data: 'avescore' },
                         { data: 'info' }
                     ],
                     columnDefs: [
@@ -110,7 +108,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + data + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + '</button>';
                             }
                         }
                     ]
@@ -140,7 +138,7 @@
                     searching: false,
                     data: response,
                     columns:[
-                        { data: 'question_id' },
+                        { data: 'exam_id' },
                         { data: 'score' }
                     ]
                 });
