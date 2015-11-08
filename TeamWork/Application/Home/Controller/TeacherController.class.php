@@ -24,7 +24,7 @@ class TeacherController extends Controller {
     
     public function getStudentInfo(){
         $student_id = I('param.student_id');
-        $Dao = M('stu_ques_id');
+        $Dao = M('stu_ques');
         $result = $Dao->where("student_id=$student_id")->select();
 
         echo json_encode($result);
@@ -87,7 +87,7 @@ class TeacherController extends Controller {
      public function getExamList(){
         $teacher_id = I('param.teacher_id');
         $Dao = M('exam');
-        $result = $Dao->where("teacher_id=$teacher_id")->select();
+        $result = $Dao->where("teacher_id=$teacher_id AND status='finished'")->select();
         $data = array();
         foreach($result as $r){
             $d = array();
@@ -101,6 +101,23 @@ class TeacherController extends Controller {
 
         echo json_encode($data);
     }
+
+    public function getProcessingExamList(){
+        $teacher_id = I('param.teacher_id');
+        $Dao = M('exam');
+        $result = $Dao->where("teacher_id=$teacher_id AND status='processing'")->select();
+        $data = array();
+        foreach($result as $r){
+            $d = array();
+            $d['exam_id'] = $r['exam_id'];
+            $d['name'] = $r['name'];
+            $d['question_id'] = $r['question_id'];
+            $d['spend_time'] = $r['spend_time'];
+            $d['info'] = $r['exam_id'];
+            array_push($data,$d);
+        }
+        echo json_encode($data);
+    }
     
     public function getExamInfo(){
         $exam_id = I('param.exam_id');
@@ -110,6 +127,20 @@ class TeacherController extends Controller {
         echo json_encode($result);
     }
 
+    public function arrangeExam(){
+        $exam['question_id'] = I('param.question_id');
+        $exam['teacher_id'] = I('param.teacher_id');
+        $exam['spend_time'] = I('param.spend_time');
+        $exam['name'] = I('param.exam_name');
+        $exam['status'] = 'processing';
+
+        $Dao = M('exam');
+        $Dao->add($exam);
+        $result['status'] = 'ok';
+        $result['message'] = 'exam arranged';
+        
+        echo json_encode($result);
+    }
 
 }
 

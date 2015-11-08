@@ -1,12 +1,13 @@
 <include file="Index/header"/>
 <js href="__PUBLIC__/assets/js/jquery.dataTables.min.js"/>
+<js href="__PUBLIC__/assets/js/echarts-all.js"/>
 <css href="__PUBLIC__/assets/css/jquery.dataTables.min.css"/>
 <style>
     .list-title {
       text-align: center;
       padding: 20px;
     }
-    #questionList {
+    #examList {
       text-align: center;
     }
     th {
@@ -25,8 +26,16 @@
                 <ul class="am-nav am-nav-pills am-topbar-nav">
                     <li><a href="{:U("Home/Teacher/index")}">首页</a></li>
                     <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
-                    <li class="am-active"><a href="#">习题</a></li>
-                    <li><a href="{:U("Home/Teacher/examList")}">考试</a></li>
+                    <li><a href="{:U("Home/Teacher/questionList")}">试题</a></li>
+                    <li class="am-active am-dropdown" data-am-dropdown>
+                        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                            考试 <span class="am-icon-caret-down"></span>
+                        </a>
+                        <ul class="am-dropdown-content">
+                            <li><a href="{:U("Home/Teacher/examList")}">已完成</a></li>
+                            <li class="am-active"><a href="#">进行中</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <if condition="session('teacher')">
@@ -48,52 +57,27 @@
         </div>
     </header>
     <div class="list-title">
-        <h1>试题列表</h1>
+        <h1>考试信息</h1>
     </div>
-    <div class="am-g am-u-lg-10 am-u-lg-centered">
-        <table id="questionList" class="stripe">
-            <thead>
-                <tr>
-                    <th>试题编号</th>
-                    <th>试题名称</th>
-                    <th>试题内容</th>
-                </tr>
-            </thead>
+    <div class="am-g am-u-lg-centered">
+        <table id="examList" class="stripe">
         </table>
     </div>
     <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal">
         <div class="am-modal-dialog">
-            <div class="am-modal-hd">试题内容
-                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
-            </div>
-            <div class="am-modal-bd" id="questionContent">
-                <table id="questionContentTable" class="stripe">
-                    <thead>
-                        <tr>
-                            <th>题目</th>
-                            <th>答案</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="am-modal am-modal-no-btn" tabindex="-1" id="set-exam-info">
-        <div class="am-modal-dialog">
-            <div class="am-modal-hd">设置考试信息
+            <div class="am-modal-hd">本次考试得分情况
                 <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
             </div>
             <div class="am-modal-bd">
-                <div class="am-input-group">
-                    <span class="am-input-group-label">考试名称</span>
-                    <input type="text" class="am-form-field" id="exam-name">
-                </div>
-                <div class="am-input-group">
-                    <span class="am-input-group-label">所需时间</span>
-                    <input type="number" class="am-form-field" id="spend-time">
-                    <span class="am-input-group-label">分钟</span>
-                </div><br>
-                <button class="am-u-lg-centered" onclick="arrangeExam()">安排考试</button>
+                <table id="examInfoTable" class="stripe">
+                    <thead>
+                        <tr>
+                            <th>学生编号</th>
+                            <th>学生姓名</th>
+                            <th>学生得分</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
@@ -101,9 +85,9 @@
 
 <script type="text/javascript">
     $(document).ready(function($) {
-
+        $('#examList').append('<thead><tr><th>考试编号</th><th>考试名称</th><th>考题编号</th><th>考试耗时</th><th>学生成绩</th></tr></thead>');
         $.ajax({
-            url: '{:U("/Home/Teacher/getQuestionList")}',
+            url: '{:U("/Home/Teacher/getProcessingExamList")}',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -111,12 +95,14 @@
             }
         })
             .done(function(response) {
-                $('#questionList').DataTable( {
+                $('#examList').DataTable( {
                     data: response,
                     columns: [
-                        { data: 'question_id' },
+                        { data: 'exam_id' },
                         { data: 'name' },
-                        { data: 'question_content' }
+                        { data: 'question_id' },
+                        { data: 'spend_time' },
+                        { data: 'info' }
                     ],
                     columnDefs: [
                         <!-- { -->
@@ -127,7 +113,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="showQuestionContent(' + data + ')">' +  "试题内容" + '</button>' + '<button type="button" class="am-btn am-btn-secondary" onclick="setArrangingExamInfo(' + data + ')">' +  "安排考试" + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="getExamInfo(' + data + ')">' +  "状态" + '</button>';
                             }
                         }
                     ]
@@ -141,30 +127,30 @@
             });
     });
 
-    function showQuestionContent(data){
+    var myChart = echarts.init(document.getElementById('examInfoContent'));
 
+    function getExamInfo(exam_id){
         $.ajax({
-            url: '{:U("/Home/Teacher/getQuestionContent")}',
+            url: '{:U("/Home/Teacher/getExamInfo")}',
             type: 'POST',
             dataType: 'json',
             data: {
-                question_id: data
+                exam_id: exam_id
             }
         })
-            .success(function(response) {
-                <!-- var content = JSON.parse(response); -->
-                console.log(response);
-                $('#questionContentTable').DataTable({
+            .done(function(response){
+                $('#examInfoTable').DataTable({
                     bDestroy: true,
                     paging: false,
                     searching: false,
                     data: response,
                     columns:[
-                        { data: 'text' },
-                        { data: 'answer' }
+                        { data: 'student_id' },
+                        { data: 'student_name' },
+                        { data: 'score' }
                     ]
                 });
-                $("#my-modal").modal('open');
+                $("#my-modal").modal("open");
             })
             .fail(function() {
                 console.log("error");
@@ -173,29 +159,59 @@
                 console.log("complete");
             });
     }
-
-    var arranging_exam_question_id;
-
-    function setArrangingExamInfo(question_id) {
-        arranging_exam_question_id = question_id;
-        $('#set-exam-info').modal('open');
-    }
-
-    function arrangeExam(){
+    function showExamChart(exam_id){
         $.ajax({
-            url: '{:U("/Home/Teacher/arrangeExam")}',
+            url: '{:U("/Home/Teacher/getExamInfo")}',
             type: 'POST',
             dataType: 'json',
             data: {
-                teacher_id: '{:I("session.teacher")["teacher_id"]}',
-                question_id: arranging_exam_question_id,
-                exam_name: $('#exam-name').val(),
-                spend_time: $('#spend-time').val()
+                exam_id: exam_id
             }
         })
-            .done(function(response) {
-                var result = response.message;
-                alert(result.toString());
+            .done(function(response){
+                var ydata = response.map(function(d) {
+                    return d.score;
+                });
+                var xdata = response.map(function(d) {
+                    return d.student_name;
+                });
+                myChart.clear();
+                option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : xdata
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}分'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'分数',
+                            type:'line',
+                            data: ydata,
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+                $("#my-chart-modal").modal("open");
             })
             .fail(function() {
                 console.log("error");

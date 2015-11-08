@@ -1,5 +1,6 @@
 <include file="Index/header"/>
 <js href="__PUBLIC__/assets/js/jquery.dataTables.min.js"/>
+<js href="__PUBLIC__/assets/js/echarts-all.js"/>
 <css href="__PUBLIC__/assets/css/jquery.dataTables.min.css"/>
 <style>
     .list-title {
@@ -26,7 +27,15 @@
                     <li><a href="{:U("Home/Teacher/index")}">首页</a></li>
                     <li><a href="{:U("Home/Teacher/studentList")}">学生</a></li>
                     <li><a href="{:U("Home/Teacher/questionList")}">试题</a></li>
-                    <li class="am-active"><a href="#">考试</a></li>
+                    <li class="am-active am-dropdown" data-am-dropdown>
+                        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                            考试 <span class="am-icon-caret-down"></span>
+                        </a>
+                        <ul class="am-dropdown-content">
+                            <li class="am-active"><a href="#">已完成</a></li>
+                            <li><a href="{:U("Home/Teacher/processingExam")}">进行中</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <if condition="session('teacher')">
@@ -52,15 +61,6 @@
     </div>
     <div class="am-g am-u-lg-centered">
         <table id="examList" class="stripe">
-            <thead>
-                <tr>
-                    <th>考试编号</th>
-                    <th>考试名称</th>
-                    <th>考题编号</th>
-                    <th>考试耗时</th>
-                    <th>学生成绩</th>
-                </tr>
-            </thead>
         </table>
     </div>
     <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal">
@@ -68,7 +68,7 @@
             <div class="am-modal-hd">本次考试得分情况
                 <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
             </div>
-            <div class="am-modal-bd" id="studentInfoContent">
+            <div class="am-modal-bd">
                 <table id="examInfoTable" class="stripe">
                     <thead>
                         <tr>
@@ -81,11 +81,19 @@
             </div>
         </div>
     </div>
+    <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-chart-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">本次考试得分情况
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-u-lg-centered" id="examInfoContent" style="height:300px;width:500px;"></div>
+        </div>
+    </div>
 </body>
 
 <script type="text/javascript">
     $(document).ready(function($) {
-
+        $('#examList').append('<thead><tr><th>考试编号</th><th>考试名称</th><th>考题编号</th><th>考试耗时</th><th>学生成绩</th></tr></thead>');
         $.ajax({
             url: '{:U("/Home/Teacher/getExamList")}',
             type: 'POST',
@@ -113,7 +121,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="getExamInfo(' + data + ')">' +  "学生得分" + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="getExamInfo(' + data + ')">' +  "学生得分" + '</button><button type="button" class="am-btn am-btn-primary" onclick="showExamChart(' + data + ')">' +  "统计图表" + '</button>';
                             }
                         }
                     ]
@@ -126,6 +134,8 @@
                 console.log("complete");
             });
     });
+
+    var myChart = echarts.init(document.getElementById('examInfoContent'));
 
     function getExamInfo(exam_id){
         $.ajax({
@@ -149,6 +159,67 @@
                     ]
                 });
                 $("#my-modal").modal("open");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+    function showExamChart(exam_id){
+        $.ajax({
+            url: '{:U("/Home/Teacher/getExamInfo")}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                exam_id: exam_id
+            }
+        })
+            .done(function(response){
+                var ydata = response.map(function(d) {
+                    return d.score;
+                });
+                var xdata = response.map(function(d) {
+                    return d.student_name;
+                });
+                myChart.clear();
+                option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : xdata
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}分'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'分数',
+                            type:'line',
+                            data: ydata,
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+                $("#my-chart-modal").modal("open");
             })
             .fail(function() {
                 console.log("error");
