@@ -1,6 +1,4 @@
-<include file="Index/header"/>
-<js href="__PUBLIC__/assets/js/jquery.dataTables.min.js"/>
-<css href="__PUBLIC__/assets/css/jquery.dataTables.min.css"/>
+<include file="Index/teacherheader"/>
 <style>
     .list-title {
       text-align: center;
@@ -13,53 +11,22 @@
       text-align: center;
     }
 </style>
-<body>
-    <header class="am-topbar am-topbar-fixed-top">
-        <div class="am-container">
-            <h1 class="am-topbar-brand">教师模块 </h1>
-            <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-secondary am-show-sm-only" data-am-collapse="{target: '#collapse-head'}">
-                <span class="am-sr-only">导航切换</span>
-                <span class="am-icon-bars"></span>
-            </button>
-            <div class="am-collapse am-topbar-collapse" id="collapse-head">
-                <ul class="am-nav am-nav-pills am-topbar-nav">
-                    <li><a href="{:U("Home/Teacher/index")}">首页</a></li>
-                    <li class="am-active"><a href="#">学生</a></li>
-                    <li><a href="{:U("Home/Teacher/questionList")}">习题</a></li>
-                    <li><a href="{:U("Home/Teacher/examList")}">考试</a></li>
-                </ul>
 
-                <if condition="session('teacher')">
-                    <div class="am-topbar-right">
-                        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
-                            <span class="am-icon-user"></span>
-                            <a href="#"> {:I('session.teacher')['username']}</a>
-                        </button>
-                    </div>
-                <else />
-                    <div class="am-topbar-right">
-                        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
-                            <span class="am-icon-pencil"></span>
-                            <a href="{:U("/Home/Teacher/login")}"> 登录</a>
-                        </button>
-                    </div>
-                </if>
-            </div>
-        </div>
-    </header>
     <div class="list-title">
         <h1>学生信息列表</h1>
     </div>
-    <div class="am-g am-u-lg-centered">
-        <table id="studentList" class="stripe">
-            <thead>
-                <tr>
-                    <th>学生学号</th>
-                    <th>学生姓名</th>
-                    <th>学生详情</th>
-                </tr>
-            </thead>
-        </table>
+    <div class="am-container">
+        <div class="am-g am-u-lg-centered">
+            <table id="studentList" class="am-table am-table-bordered">
+                <thead>
+                    <tr>
+                        <th>学生学号</th>
+                        <th>学生姓名</th>
+                        <th>学生详情</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
     <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-modal">
         <div class="am-modal-dialog">
@@ -67,7 +34,7 @@
                 <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
             </div>
             <div class="am-modal-bd" id="studentInfoContent">
-                <table id="studentInfoTable" class="stripe">
+                <table id="studentInfoTable" class="am-table am-table-bordered">
                     <thead>
                         <tr>
                             <th>试题编号</th>
@@ -78,7 +45,7 @@
             </div>
         </div>
     </div>
-</body>
+<include file="Index/footer"/>
 
 <script type="text/javascript">
     $(document).ready(function($) {
@@ -93,6 +60,24 @@
         })
             .done(function(response) {
                 $('#studentList').DataTable( {
+                    "bProcessing": true,
+                    "bDestroy": true,
+                    "sPaginationType" : "full_numbers",
+                    "oLanguage" : {
+                          "sLengthMenu": "每页显示 _MENU_ 条记录",
+                          "sZeroRecords": "抱歉， 没有找到",
+                          "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                          "sInfoEmpty": "没有数据",
+                          "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                          "sZeroRecords": "没有检索到数据",
+                           "sSearch": "搜索: &nbsp",
+                          "oPaginate": {
+                            "sFirst": "首页",
+                            "sPrevious": "前一页",
+                            "sNext": "后一页",
+                            "sLast": "尾页"
+                          }
+                      }, 
                     data: response,
                     columns: [
                         { data: 'student_id' },
