@@ -1,6 +1,8 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+use Think\Model;
+
 class StudentController extends Controller {
     public function index(){
        $this->display('student/index');
@@ -130,6 +132,26 @@ class StudentController extends Controller {
         }
 
         echo json_encode($result);
+    }
+
+    public function getLetter(){
+        $Model = D('Letter');
+        $r = $Model->relation(true)->select();
+        echo json_encode($r);
+    }
+
+    public function getLetterNum(){
+        $Model = M('letter');
+        $param['status'] = '0';
+        $r = $Model->where($param)->field('count(*) as num')->find();
+        echo json_encode($r);
+    }
+
+    public function updateLetter(){
+        $data = I('param.');
+        $Model = M('letter');
+        $r = $Model->save($data);
+        echo json_encode($r);
     }
 }
 

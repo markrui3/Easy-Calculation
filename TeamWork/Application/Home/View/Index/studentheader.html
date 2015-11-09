@@ -24,6 +24,15 @@
 
     <script>
         baseUrl = '__ROOT__';
+        $.ajax({
+            url: '{:U("Home/Student/getLetterNum/")}',
+            type: 'post',
+            dataType: 'json'
+        })
+        .success(function(data){
+            $('#letter_num').html(data.num);
+        });
+       
     </script>
 </head>
 <body>
@@ -47,7 +56,7 @@
                             <li><a href="{:U("Home/Student/processingExam")}">进行中</a></li>
                         </ul>
                     </li>
-                    <li><a href="javascript:;">收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+                    <li><a href="{:U("Home/Student/letter")}">通知 <span id="letter_num" class="am-badge am-badge-warning"></span></a></li>
                 </ul>
 
                 <if condition="session('student')">
