@@ -90,11 +90,14 @@ class StudentController extends Controller {
     public function submitExam(){
         $exam_id = I('param.exam_id');
         $student_id = I('param.student_id');
+        $spend_time = I('param.spend_time');
         $score = I('param.score');
         $Dao = M('stu_exam');
         $Dao->score = $score;
+        $Dao->time_spent = $spend_time;
         $result['status'] = $Dao->where("exam_id=$exam_id AND student_id=$student_id")->save();
         $result['message'] = 'submit exam-score';
+        $result['spend_time'] = $spend_time;
 
         echo json_encode($result);
     }
