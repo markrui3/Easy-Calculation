@@ -1,6 +1,8 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
+use Think\Model;
+
 class StudentController extends Controller {
     public function index(){
        $this->display('student/index');
@@ -90,11 +92,14 @@ class StudentController extends Controller {
     public function submitExam(){
         $exam_id = I('param.exam_id');
         $student_id = I('param.student_id');
+        $spend_time = I('param.spend_time');
         $score = I('param.score');
         $Dao = M('stu_exam');
         $Dao->score = $score;
+        $Dao->time_spent = $spend_time;
         $result['status'] = $Dao->where("exam_id=$exam_id AND student_id=$student_id")->save();
         $result['message'] = 'submit exam-score';
+        $result['spend_time'] = $spend_time;
 
         echo json_encode($result);
     }
@@ -128,5 +133,58 @@ class StudentController extends Controller {
 
         echo json_encode($result);
     }
+
+    public function getLetter(){
+        $Model = D('Letter');
+        $r = $Model->relation(true)->select();
+        echo json_encode($r);
+    }
+
+    public function getLetterNum(){
+        $Model = M('letter');
+        $param['status'] = '0';
+        $r = $Model->where($param)->field('count(*) as num')->find();
+        echo json_encode($r);
+    }
+
+    public function updateLetter(){
+        $data = I('param.');
+        $Model = M('letter');
+        $r = $Model->save($data);
+        echo json_encode($r);
+    }
+
+    public function deleteLetter(){
+        $param['letter_id'] = I('param.letter_id');
+        $Model = M('letter');
+        $r = $Model->where($param)->delete();
+        echo json_encode($r);
+    }
+
+    public function getTeacherInfo(){
+        $teacher = M('teacher');
+        $result = $teacher->select();
+        echo json_encode($result);
+    }
+
+    public function checkRegister(){
+        $name = I('param.name');
+        $username = I('param.username');
+        $password= I('param.password');
+        $teacher_id = I('param.teacher_id');
+
+        $Dao = M('student');
+        $result['name'] = $name;
+        $result['username'] = $username;
+        $result['pwd']= $password;
+        $result['teacher_id'] = $teacher_id;
+        $id = $Dao->add($result);
+
+        $response['message'] = 'register success';
+        $response['status'] = 'success';
+        $response['id'] = $id;
+        echo json_encode($response);
+    }
+      
 }
 

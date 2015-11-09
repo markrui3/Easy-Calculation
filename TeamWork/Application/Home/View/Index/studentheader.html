@@ -24,6 +24,22 @@
 
     <script>
         baseUrl = '__ROOT__';
+        $.ajax({
+            url: '{:U("Home/Student/getLetterNum/")}',
+            type: 'post',
+            dataType: 'json'
+        })
+        .success(function(data){
+            $('#letter_num').html(data.num);
+        });
+
+        $('#nav_bar li').each(function(){
+            console.log($(this));
+            if(window.location.pathname){
+
+            }
+        });
+       
     </script>
 </head>
 <body>
@@ -35,7 +51,7 @@
                 <span class="am-icon-bars"></span>
             </button>
             <div class="am-collapse am-topbar-collapse" id="collapse-head">
-                <ul class="am-nav am-nav-pills am-topbar-nav">
+                <ul id="nav_bar" class="am-nav am-nav-pills am-topbar-nav">
                     <li><a href="{:U("Home/Student/index")}">首页</a></li>
                     <li><a href="{:U("Home/Student/questionList")}">习题</a></li>
                     <li class="am-dropdown" data-am-dropdown>
@@ -47,7 +63,7 @@
                             <li><a href="{:U("Home/Student/processingExam")}">进行中</a></li>
                         </ul>
                     </li>
-                    <li><a href="javascript:;">收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+                    <li><a href="{:U("Home/Student/letter")}">通知 <span id="letter_num" class="am-badge am-badge-warning"></span></a></li>
                 </ul>
 
                 <if condition="session('student')">
@@ -58,6 +74,12 @@
                         </button>
                     </div>
                 <else />
+                    <div class="am-topbar-right">
+                        <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                            <span class="am-icon-user-plus"></span>
+                            <a href="{:U("/Home/Student/register")}"> 注册</a>
+                        </button>
+                    </div>
                     <div class="am-topbar-right">
                         <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                             <span class="am-icon-pencil"></span>

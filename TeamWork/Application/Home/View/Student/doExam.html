@@ -64,7 +64,7 @@
 
     var ExamTable = React.createClass({
       getInitialState: function() {
-        return {data: [], question_id: this.props.question_id, sum: 0};
+        return {data: [], question_id: this.props.question_id, sum: 0, second: 0};
       },
       loadQuestionData: function() {
           $.ajax({
@@ -81,6 +81,9 @@
                 console.error(status, err.toString());
               }.bind(this)
           });
+          var time = new Date();
+          var time_second = time.getSeconds();
+          this.setState({second: time_second});
       },
       onChildChanged: function(score) {
         this.setState({sum: this.state.sum + score});
@@ -92,6 +95,8 @@
         var student_id = "{:I('session.student')['student_id']}";
         var exam_id = "{:I('param.exam_id')}";
         var score = parseFloat(this.state.sum) / parseFloat(this.state.data.length) * 100;
+        var end_time = new Date();
+        var spend_time = end_time.getSeconds() - this.state.second;
           $.ajax({
               url: '{:U("/Home/Student/submitExam")}',
               dataType: 'json',
@@ -99,6 +104,7 @@
               data: {
                 student_id: student_id,
                 exam_id: exam_id,
+                spend_time: spend_time,
                 score: score
               },
               success: function(response) {

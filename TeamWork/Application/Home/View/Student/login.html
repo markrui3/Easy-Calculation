@@ -7,20 +7,20 @@
   </div>
 </header>
 <body>
-  <div class="am-g">
-    <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
-      <hr>
-      <form class="am-form">
-        <label>用户名</label>
-        <input id="username" name="username" type="text">
-        <br>
-        <label>密码</label>
-        <input id="password" name="password" type="password">
-        <br>
-      </form>
-      <button class="am-btn am-btn-primary am-u-sm-centered" id="login-btn" name="login-btn">登录</button>
-      <hr>
-    </div>
+    <div class="am-g">
+        <div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+            <hr>
+            <form class="am-form">
+                <label>用户名</label>
+                <input type="text" name="username" id="username">
+                <br>
+                <label>密码</label>
+                <input type="password" name="password" id="password">
+                <br>
+            </form>
+            <button name="login-btn" id="login-btn" class="am-btn am-btn-primary am-u-sm-centered">登录</button>
+            <hr>
+        </div>
   </div>
   <script type="text/javascript">
     $(document)
@@ -33,8 +33,7 @@
             if (username == '' || password == '') {
               return;
             }
-            $
-              .ajax({
+            $.ajax({
                 url: '{:U("/Home/Student/checkLogin")}', type: 'POST', dataType: 'json', data: {
                   username: username,
                   password: password

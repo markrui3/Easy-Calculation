@@ -63,7 +63,7 @@
                         <i class="am-icon-user am-icon-sm"></i>  学生成绩监督
                     </h3>
                     <p class="detail-p">
-                        在线查看学生的基本信息以及历次考试成绩，便于分析学生对知识的掌握情况，从而因材施教 
+                        在线查看学生的基本信息以及历次考试成绩，便于分析学生对知识的掌握情况，从而因材施教
                     </p>
                 </div>
                 <div class="am-u-lg-3 am-u-md-6 am-u-sm-12 detail-mb">
@@ -94,4 +94,39 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+  var isTimeStop = false; // 终止前一个count
+
+function countDown(selector, second) {
+	if (isTimeStop) {
+		return;
+	}
+	console.log(second);
+	// 如果秒数还是大于0，则表示倒计时还没结束
+	if (second >= 0) {
+		// 按钮置为不可点击状态
+		$(selector).attr("disabled", true);
+		// 按钮里的内容呈现倒计时状态
+		$(selector).html("等待" + second + '秒');
+		// 时间减一
+		second--;
+		// 一秒后重复执行
+		action = setTimeout(function() {
+			countDown(selector, second);
+		}, 1000);
+		// 否则，按钮重置为初始状态
+	} else {
+		isTimeStop = true;
+		// 按钮里的内容恢复初始状态
+		$(selector).html("获取");
+		// 按钮置未可点击状态
+		$(selector).attr("disabled", false);
+		if(action != null){
+			clearTimeout(action);
+			action = null;
+		}
+	}  
+}
+</script>
 <include file="Index/footer"/>
