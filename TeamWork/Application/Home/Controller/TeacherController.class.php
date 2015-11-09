@@ -153,5 +153,14 @@ class TeacherController extends Controller {
         echo json_encode($result);
     }
 
+    public function addLetter(){
+        $data['student_id'] = I('param.student_id');
+        $data['teacher_id'] = session('teacher')['teacher_id'];
+        $data['content'] = I('param.content');
+        $Model = M('letter');
+        $r = $Model->add($data);
+        echo json_encode($r);
+    }
+
 }
 

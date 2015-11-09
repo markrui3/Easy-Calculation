@@ -93,9 +93,9 @@
                             "data": null,
                             "render": function (data, type, row, table) {
                                 if(row.status == '0'){
-                                    return '<button type="button" class="am-btn am-btn-primary" onclick="modStatus(' + row.letter_id + ',\'1\')">' +  "已读" + '</button>';
+                                    return '<button type="button" class="am-btn am-btn-primary" onclick="modStatus(' + row.letter_id + ',\'1\')">' +  "已读" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="del(' + row.letter_id + ')">删除</button>';
                                 }else{
-                                    return '<button type="button" class="am-btn am-btn-primary" onclick="modStatus(' + row.letter_id + ',\'0\')">' +  "置为未读" + '</button>';
+                                    return '<button type="button" class="am-btn am-btn-primary" onclick="modStatus(' + row.letter_id + ',\'0\')">' +  "置为未读" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="del(' + row.letter_id + ')">删除</button>';
                                 }
                                 
                             }
@@ -130,5 +130,19 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+
+    function del(letter_id){
+        $.ajax({
+            url: '{:U("/Home/Student/deleteLetter")}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                letter_id: letter_id
+            }
+        })
+        .success(function(response){
+            location.reload();
+        })
     }
 </script>

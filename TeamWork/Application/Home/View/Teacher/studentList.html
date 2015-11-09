@@ -45,6 +45,20 @@
             </div>
         </div>
     </div>
+
+    <div class="am-modal am-modal-prompt" tabindex="-1" id="letter-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">通知</div>
+            <div class="am-modal-bd">
+                通知内容
+                <textarea id="content" class="am-modal-prompt-input"></textarea>
+            </div>
+            <div class="am-modal-footer">
+                <span class="am-modal-btn" onclick="submit()">确认</span>
+                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            </div>
+        </div>
+    </div>
 <include file="Index/footer"/>
 
 <script type="text/javascript">
@@ -93,7 +107,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="letter(' + data + ')">' +  "通知" + '</button>';
                             }
                         }
                     ]
@@ -118,7 +132,24 @@
         })
             .done(function(response){
                 $('#studentInfoTable').DataTable({
-                    bDestroy: true,
+                    "bProcessing": true,
+                    "bDestroy": true,
+                    "sPaginationType" : "full_numbers",
+                    "oLanguage" : {
+                          "sLengthMenu": "每页显示 _MENU_ 条记录",
+                          "sZeroRecords": "抱歉， 没有找到",
+                          "sInfo": "从 _START_ 到 _END_ /共 _TOTAL_ 条数据",
+                          "sInfoEmpty": "没有数据",
+                          "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                          "sZeroRecords": "没有检索到数据",
+                           "sSearch": "搜索: &nbsp",
+                          "oPaginate": {
+                            "sFirst": "首页",
+                            "sPrevious": "前一页",
+                            "sNext": "后一页",
+                            "sLast": "尾页"
+                          }
+                      }, 
                     paging: false,
                     searching: false,
                     data: response,
@@ -135,5 +166,26 @@
             .always(function() {
                 console.log("complete");
             });
+    }
+    var student_id = "";
+    function letter(studentid){
+        student_id = studentid;
+        $("#letter-modal").modal('open');
+    }
+
+    function submit(){
+        $.ajax({
+            url: '{:U("/Home/Teacher/addLetter")}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                student_id: student_id,
+                content:$('#content').val()
+            }
+        })
+        .done(function(data){
+            //$("#letter-modal").modal('close');
+            //location.reload();
+        })
     }
 </script>

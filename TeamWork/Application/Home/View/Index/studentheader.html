@@ -32,6 +32,13 @@
         .success(function(data){
             $('#letter_num').html(data.num);
         });
+
+        $('#nav_bar li').each(function(){
+            console.log($(this));
+            if(window.location.pathname){
+
+            }
+        });
        
     </script>
 </head>
@@ -44,7 +51,7 @@
                 <span class="am-icon-bars"></span>
             </button>
             <div class="am-collapse am-topbar-collapse" id="collapse-head">
-                <ul class="am-nav am-nav-pills am-topbar-nav">
+                <ul id="nav_bar" class="am-nav am-nav-pills am-topbar-nav">
                     <li><a href="{:U("Home/Student/index")}">首页</a></li>
                     <li><a href="{:U("Home/Student/questionList")}">习题</a></li>
                     <li class="am-dropdown" data-am-dropdown>

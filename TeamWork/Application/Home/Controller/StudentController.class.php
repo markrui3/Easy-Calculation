@@ -153,5 +153,12 @@ class StudentController extends Controller {
         $r = $Model->save($data);
         echo json_encode($r);
     }
+
+    public function deleteLetter(){
+        $param['letter_id'] = I('param.letter_id');
+        $Model = M('letter');
+        $r = $Model->where($param)->delete();
+        echo json_encode($r);
+    }
 }
 
