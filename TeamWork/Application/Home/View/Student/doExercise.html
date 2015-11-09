@@ -14,7 +14,7 @@
         </div>
         <div id="questionList">
         </div>
-        <!-- <table class="am-table"> --> 
+        <!-- <table class="am-table"> -->
         <!--     <tbody ></tbody> -->
         <!-- </table> -->
         <div class="am-panel-footer">
@@ -34,7 +34,7 @@
         }
         else if(event.target.value != this.state.answer){
             this.setState({result: "danger"});
-        }            
+        }
         else {
             this.setState({result: "success"});
         }
@@ -52,7 +52,7 @@
           </tr>
         );
       }
-    }); 
+    });
 
     var QuestionTable = React.createClass({
       getInitialState: function() {
@@ -82,7 +82,7 @@
           <table className="am-table">
               <tbody>
                   {this.state.data.map(function(d,i){
-                      return <QuestionItem key={i} text={d.text} answer={d.answer}/> 
+                      return <QuestionItem key={i} text={d.text} answer={d.answer}/>
                   })}
               </tbody>
           </table>
