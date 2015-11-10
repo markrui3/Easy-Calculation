@@ -6,6 +6,23 @@ class TeacherController extends Controller {
        $this->display('teacher/index');
     }
 
+    public function checkRegister(){
+        $name = I('param.name');
+        $username = I('param.username');
+        $password= I('param.password');
+
+        $Dao = M('teacher');
+        $result['name'] = $name;
+        $result['username'] = $username;
+        $result['pwd']= $password;
+        $id = $Dao->add($result);
+
+        $response['message'] = 'register success';
+        $response['status'] = 'success';
+        $response['id'] = $id;
+        echo json_encode($response);
+    }
+
     public function getStudentList(){
         $teacher_id = I('param.teacher_id');
         $Dao = M('student');

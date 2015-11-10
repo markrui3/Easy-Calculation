@@ -160,5 +160,31 @@ class StudentController extends Controller {
         $r = $Model->where($param)->delete();
         echo json_encode($r);
     }
+
+    public function getTeacherInfo(){
+        $teacher = M('teacher');
+        $result = $teacher->select();
+        echo json_encode($result);
+    }
+
+    public function checkRegister(){
+        $name = I('param.name');
+        $username = I('param.username');
+        $password= I('param.password');
+        $teacher_id = I('param.teacher_id');
+
+        $Dao = M('student');
+        $result['name'] = $name;
+        $result['username'] = $username;
+        $result['pwd']= $password;
+        $result['teacher_id'] = $teacher_id;
+        $id = $Dao->add($result);
+
+        $response['message'] = 'register success';
+        $response['status'] = 'success';
+        $response['id'] = $id;
+        echo json_encode($response);
+    }
+      
 }
 
