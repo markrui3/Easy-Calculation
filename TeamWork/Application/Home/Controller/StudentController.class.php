@@ -136,13 +136,15 @@ class StudentController extends Controller {
 
     public function getLetter(){
         $Model = D('Letter');
-        $r = $Model->relation(true)->select();
+        $param['student_id'] = session('student')['student_id'];
+        $r = $Model->where($param)->relation(true)->select();
         echo json_encode($r);
     }
 
     public function getLetterNum(){
         $Model = M('letter');
         $param['status'] = '0';
+        $param['student_id'] = session('student')['student_id'];
         $r = $Model->where($param)->field('count(*) as num')->find();
         echo json_encode($r);
     }
