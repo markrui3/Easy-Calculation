@@ -10,9 +10,6 @@
   <br/>
     <div class="am-container">
         <div class="am-panel am-panel-default">
-            <div class="am-panel-hd">
-                <h2 class="am-panel-title">考试</h2>
-            </div>
             <div id="examList">
             </div>
             <!-- <table class="am-table"> --> 
@@ -66,7 +63,7 @@
 
     var ExamTable = React.createClass({
       getInitialState: function() {
-        return {data: [], question_id: this.props.question_id, sum: 0, second: 0};
+        return {data: [], question_id: this.props.question_id, time_left: this.props.spend_time, sum: 0, second: 0};
       },
       loadQuestionData: function() {
           $.ajax({
@@ -83,8 +80,7 @@
                 console.error(status, err.toString());
               }.bind(this)
           });
-          var time = new Date();
-          var time_second = time.getSeconds();
+          var time_second = Date.parse(new Date()) / 1000; 
           this.setState({second: time_second});
       },
       onChildChanged: function(score) {
@@ -92,13 +88,16 @@
       },
       componentDidMount: function() {
         this.loadQuestionData();
+        this.timer = setInterval(function () {
+            var t = this.state.time_left - 1;
+            this.setState({time_left: t}); 
+        }.bind(this), 1000);
       },
       submitExam: function() {
         var student_id = "{:I('session.student')['student_id']}";
         var exam_id = "{:I('param.exam_id')}";
         var score = parseFloat(this.state.sum) / parseFloat(this.state.data.length) * 100;
-        var end_time = new Date();
-        var spend_time = end_time.getSeconds() - this.state.second;
+        var spend_time = Date.parse(new Date()) / 1000 - this.state.second;
           $.ajax({
               url: '{:U("/Home/Student/submitExam")}',
               dataType: 'json',
@@ -123,6 +122,7 @@
         var childChangeFunc = this.onChildChanged;
         return (
           <div>
+              <h3 className="am-panel-title" style={{textAlign: 'center',padding: '10px 0'}}>本次考试剩余时间{this.state.time_left}秒</h3>
               <table className="am-table">
                   <tbody>
                       {this.state.data.map(function(d,i){
@@ -138,7 +138,7 @@
     });
 
     ReactDOM.render(
-        <ExamTable question_id ="{:I('param.question_id')}"/>,
+        <ExamTable question_id ="{:I('param.question_id')}" spend_time="{:I('param.spend_time')}"/>,
         document.getElementById('examList')
     );
 </script>

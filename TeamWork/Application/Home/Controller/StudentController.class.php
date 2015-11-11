@@ -72,6 +72,7 @@ class StudentController extends Controller {
             $d['exam_id'] = $r['exam_id'];
             $d['name'] = $r['name'];
             $d['spend_time'] = $r['spend_time'];
+            $d['info'] = $r['exam_id'] . ',' . $r['spend_time'];
             array_push($data,$d);
         }
 

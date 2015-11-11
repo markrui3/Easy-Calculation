@@ -73,7 +73,7 @@
                         { data: 'exam_id' },
                         { data: 'name' },
                         { data: 'spend_time' },
-                        { data: 'exam_id' }
+                        { data: 'info' }
                     ],
                     columnDefs: [
                         <!-- { -->
@@ -98,7 +98,7 @@
             });
     });
 
-    function toDoExam(exam_id){
+    function toDoExam(exam_id,spend_time){
         $.ajax({
             url: '{:U("/Home/Student/toDoExam")}',
             type: 'POST',
@@ -109,7 +109,7 @@
         })
             .done(function(response) {
                 var question_id = response.question_id.toString();
-                window.location.href = '{:U("/Home/Student/doExam/question_id/' + question_id + '/exam_id/' + exam_id + '")}';
+                window.location.href = '{:U("/Home/Student/doExam/question_id/' + question_id + '/exam_id/' + exam_id + '/spend_time/' + spend_time + '")}';
             })
             .fail(function() {
                 console.log("error");
