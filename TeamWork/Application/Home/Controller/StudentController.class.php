@@ -189,7 +189,7 @@ class StudentController extends Controller {
     }
       
     public function doLogout(){
-        session(null);
+        session('student',null);
         $this->display('student/login');
     }
 }

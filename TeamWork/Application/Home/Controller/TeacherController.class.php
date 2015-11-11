@@ -180,7 +180,7 @@ class TeacherController extends Controller {
     }
 
     public function doLogout(){
-        session(null);
+        session('teacher',null);
         $this->display('teacher/login');
     }
 

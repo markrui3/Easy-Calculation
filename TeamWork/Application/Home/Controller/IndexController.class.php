@@ -108,8 +108,8 @@ class IndexController extends Controller {
 
         //将结果返回出去
         $results=array();
-        $results['result']=$result;//结果
-        $results['expresion']=$expresion;//表达式
+        $results['text']=$expresion;//表达式
+        $results['answer']=$result;//结果
 
         //判断结果是否符合要求
         if($result<0 || $result>100 || ! is_int($result)){
@@ -122,15 +122,41 @@ class IndexController extends Controller {
         }
     }
 
-    public function test($num=4){
+    public function saveQuestion(){
+        $jjnum = I('param.jjnum');
+        $ccnum = I('param.ccnum');
+        $hhnum = I('param.hhnum');
+        $teacher_id = I('param.teacher_id');
+        $question_name = I('param.question_name');
         $result = array();
-        for($i=0; $i<$num; $i++){
-            $calculate_type = rand(1,3);
+        for($i=0; $i<$jjnum; $i++){
+            $calculate_type = 1;
             $calculate_length = rand(3,5);
             $r = $this->produceAnExpression($calculate_length,$calculate_type);
             array_push($result,$r);
         }
-        echo json_encode($result);
+        for($i=0; $i<$ccnum; $i++){
+            $calculate_type = 2;
+            $calculate_length = rand(3,5);
+            $r = $this->produceAnExpression($calculate_length,$calculate_type);
+            array_push($result,$r);
+        }
+        for($i=0; $i<$hhnum; $i++){
+            $calculate_type = 3;
+            $calculate_length = rand(3,5);
+            $r = $this->produceAnExpression($calculate_length,$calculate_type);
+            array_push($result,$r);
+        }
+        $question['question_content'] = json_encode($result);
+        $question['teacher_id'] = $teacher_id;
+        $question['name'] = $question_name;
+        $question['public'] = 'true';
+        $Dao = M('question');
+        $Dao->add($question);
+
+        $response['status'] = 'success';
+        $response['message'] = 'question added';
+        echo json_encode($response);
     }
     
     //入参、函数功能
