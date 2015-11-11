@@ -68,6 +68,12 @@
 
                 <if condition="session('student')">
                     <div class="am-topbar-right">
+                        <button id="logout-btn" class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
+                            <span class="am-icon-pencil"></span>
+                            <a href="{:U("/Home/Student/doLogout")}"> 注销</a>
+                        </button>
+                    </div>
+                    <div class="am-topbar-right">
                         <button class="am-btn am-btn-secondary am-topbar-btn am-btn-sm">
                             <span class="am-icon-user"></span>
                             <a href="#"> {:I('session.student')['username']}</a>

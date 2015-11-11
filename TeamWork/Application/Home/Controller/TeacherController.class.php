@@ -179,5 +179,10 @@ class TeacherController extends Controller {
         echo json_encode($r);
     }
 
+    public function doLogout(){
+        session(null);
+        $this->display('teacher/login');
+    }
+
 }
 

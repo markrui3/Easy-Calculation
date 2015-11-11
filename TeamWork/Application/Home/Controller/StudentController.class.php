@@ -186,5 +186,9 @@ class StudentController extends Controller {
         echo json_encode($response);
     }
       
+    public function doLogout(){
+        session(null);
+        $this->display('student/login');
+    }
 }
 

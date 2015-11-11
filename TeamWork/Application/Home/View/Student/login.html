@@ -34,7 +34,10 @@
               return;
             }
             $.ajax({
-                url: '{:U("/Home/Student/checkLogin")}', type: 'POST', dataType: 'json', data: {
+                url: '{:U("/Home/Student/checkLogin")}', 
+                type: 'POST', 
+                dataType: 'json', 
+                data: {
                   username: username,
                   password: password
                 }

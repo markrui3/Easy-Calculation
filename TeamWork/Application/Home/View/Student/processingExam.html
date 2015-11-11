@@ -12,6 +12,12 @@
     }
 </style>
 
+<if condition="session('student')">
+<else />
+    <script type="text/javascript">
+        window.location.href = '{:U("/Home/Student/login")}';
+    </script>
+</if>
     <div class="list-title">
         <h1>考试信息</h1>
     </div>
