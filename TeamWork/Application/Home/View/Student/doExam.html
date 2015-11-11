@@ -120,6 +120,12 @@
       },
       render: function() {
         var childChangeFunc = this.onChildChanged;
+        if(this.state.time_left <= 0){
+            this.submitExam();
+            setInterval(function(){
+                window.location.href = '{:U("/Home/Student/index")}';
+            },2000);
+        }
         return (
           <div>
               <h3 className="am-panel-title" style={{textAlign: 'center',padding: '10px 0'}}>本次考试剩余时间{this.state.time_left}秒</h3>
