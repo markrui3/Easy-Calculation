@@ -63,7 +63,10 @@
                             <li><a href="{:U("Home/Student/processingExam")}">进行中</a></li>
                         </ul>
                     </li>
+                <if condition="session('student')">
                     <li><a href="{:U("Home/Student/letter")}">通知 <span id="letter_num" class="am-badge am-badge-warning"></span></a></li>
+                <else />
+                </if>
                 </ul>
 
                 <if condition="session('student')">

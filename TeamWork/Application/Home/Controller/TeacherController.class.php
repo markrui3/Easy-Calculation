@@ -143,6 +143,17 @@ class TeacherController extends Controller {
         echo json_encode($result);
     }
 
+    public function endProcessingExam(){
+        $exam_id = I('param.exam_id');
+        $Dao = M('exam');
+        $Dao->status = 'finished';
+        $Dao->where("exam_id=$exam_id")->save();
+        $result['status'] = 'success';
+        $result['message'] = 'finish the exam';
+
+        echo json_encode($result);
+    }
+
     public function arrangeExam(){
         $teacher_id = I('param.teacher_id');
         $exam['question_id'] = I('param.question_id');
