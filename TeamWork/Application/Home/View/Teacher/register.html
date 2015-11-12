@@ -1,0 +1,74 @@
+<include file="Index/header"/>
+<style>
+    h1 {
+      padding: 40px 0;
+    }
+</style>
+<header class="am-g my-head">
+    <div class="am-u-sm-12 am-article">
+        <h1 class="am-article-title">教师注册</h1>
+    </div>
+</header>
+<body>
+    <div class="am-g">
+        <div class="am-u-sm-6 am-u-sm-centered">
+            <hr>
+            <form class="am-form">
+                <label>姓名</label>
+                <input type="text" name="name" id="name">
+                <label>用户名</label>
+                <input type="text" name="username" id="username">
+                <label>密码</label>
+                <input type="password" name="password" id="password">
+                <label>确认密码</label>
+                <input type="password" name="password-confirm" id="password-confirm">
+                <br>
+            </form>
+            <button name="register-btn" id="register-btn" class="am-btn am-btn-primary am-u-sm-centered">确认注册</button>
+            <hr>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function($) {
+            $("#register-btn").on('click', function(argument) {
+                var username = $("#username").val();
+                var password = $("#password").val();
+                var name = $("#name").val();
+                var password_confirm = $("#password-confirm").val();
+
+                if (name == '' || username == '' || password == '') {
+                    return;
+                } else if (password_confirm != password){
+                    alert('两次输入的密码不相同');
+                    return;
+                }
+                $.ajax({
+                    url: '{:U("/Home/Teacher/checkRegister")}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        username: username,
+                        password: password,
+                        name: name
+                    }
+                })
+                    .done(function(response) {
+                        console.log("ajax success");
+                        if (response.status== 'success') {
+                            window.location.href = '{:U("/Home/Teacher/login")}';
+                        } else {
+                            alert(response.message);
+                        }
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+
+            });
+        });
+        </script>
+</body>
+<include file="Index/footer"/>

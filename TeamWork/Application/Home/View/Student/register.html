@@ -1,0 +1,97 @@
+<include file="Index/header"/>
+<style>
+    h1 {
+      padding: 40px 0;
+    }
+</style>
+<header class="am-g my-head">
+    <div class="am-u-sm-12 am-article">
+        <h1 class="am-article-title">学生注册</h1>
+    </div>
+</header>
+<body>
+    <div class="am-g">
+        <div class="am-u-sm-6 am-u-md-8 am-u-sm-centered">
+            <hr>
+            <form class="am-form">
+                <label>姓名</label>
+                <input type="text" name="name" id="name">
+                <label>用户名</label>
+                <input type="text" name="username" id="username">
+                <label>密码</label>
+                <input type="password" name="password" id="password">
+                <label>确认密码</label>
+                <input type="password" name="confirm-password" id="confirm-password">
+                <div class="am-form-group">
+                    <label for="teacher-select">选择老师</label>
+                    <select id="teacher-select">
+                    </select>
+                    <span class="am-form-caret"></span>
+                </div>
+                <br>
+            </form>
+            <button name="register-btn" id="register-btn" class="am-btn am-btn-primary am-u-sm-centered">确认注册</button>
+            <hr>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function($) {
+            $.ajax({
+                url: '{:U("/Home/Student/getTeacherInfo")}',
+                type: 'POST',
+                dataType: 'json'
+            })
+                .done(function(response) {
+                    response.map(function(r){
+                        var option = '<option value="' + r.teacher_id + '">' + '编号' + r.teacher_id + '  ' + '姓名 ' + r.name + '</option>';
+                        $('#teacher-select').append(option);
+                    });
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+            $("#register-btn").on('click', function(argument) {
+                var name = $("#name").val();
+                var username = $("#username").val();
+                var teacher_id = $("#teacher-select").val();
+                var password = $("#password").val();
+                var confirm_password = $("#confirm-password").val();
+                if (name == '' || username == '' || password == '') {
+                    return;
+                } else if (confirm_password != password){
+                    alert('两次输入的密码不相同');
+                    return;
+                }
+                $.ajax({
+                    url: '{:U("/Home/Student/checkRegister")}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        name: name,
+                        username: username,
+                        password: password,
+                        teacher_id: teacher_id
+                    }
+                })
+                    .done(function(response) {
+                        console.log("ajax success");
+                        if (response.status== 'success') {
+                            window.location.href = '{:U("/Home/Student/login")}';
+                        } else {
+                            alert(response.message);
+                        }
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+
+            });
+        });
+        </script>
+</body>
