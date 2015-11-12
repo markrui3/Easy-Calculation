@@ -22,7 +22,7 @@
         <h1>通知列表</h1>
     </div>
     <div class="am-container">
-        <div class="am-g am-u-lg-centered">
+        <div class="am-g am-u-sm-centered">
             <table id="letterList" class="am-table am-table-bordered">
                 <thead>
                     <tr>
@@ -65,7 +65,7 @@
                             "sNext": "后一页",
                             "sLast": "尾页"
                           }
-                      }, 
+                      },
                     data: response,
                     columns: [
                         { data: 'id' },
@@ -75,21 +75,21 @@
                         { data: 'btn' },
                     ],
                     columnDefs: [
-                       
+
                         {
-                            "targets": 0, 
+                            "targets": 0,
                             "render": function (data, type, row, table) {
                                 return table.row + 1;
                             }
                         },
                          {
-                            "targets": 1, 
+                            "targets": 1,
                             "render": function (data, type, row, table) {
                                 return data.name;
                             }
                         },
                          {
-                            "targets": 3, 
+                            "targets": 3,
                             "render": function (data, type, row, table) {
                                 return data == '0'? '未读':'已读';
                             }
@@ -103,7 +103,7 @@
                                 }else{
                                     return '<button type="button" class="am-btn am-btn-primary" onclick="modStatus(' + row.letter_id + ',\'0\')">' +  "置为未读" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="del(' + row.letter_id + ')">删除</button>';
                                 }
-                                
+
                             }
                         }
                     ]
