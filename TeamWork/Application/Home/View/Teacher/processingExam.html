@@ -30,7 +30,7 @@
 
 <script type="text/javascript">
     $(document).ready(function($) {
-        $('#examList').append('<thead><tr><th>考试编号</th><th>考试名称</th><th>考题编号</th><th>考试耗时</th><th>学生成绩</th></tr></thead>');
+        $('#examList').append('<thead><tr><th>考试编号</th><th>考试名称</th><th>考题编号</th><th>考试耗时</th><th>操作</th></tr></thead>');
         $.ajax({
             url: '{:U("/Home/Teacher/getProcessingExamList")}',
             type: 'POST',
