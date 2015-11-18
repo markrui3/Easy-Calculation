@@ -45,7 +45,7 @@ class UploadController extends Controller {
           $data['question_content'] = json_encode($question_content);
           $data['teacher_id'] = session('teacher')['teacher_id'];
           $data['name'] = I('param.question_name');
-          $data['public'] = 'public';
+          $data['public'] = 'true';
           $Dao = M('question');
           $r = $Dao->add($data);
 
