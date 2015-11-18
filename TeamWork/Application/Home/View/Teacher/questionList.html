@@ -206,6 +206,7 @@
             .done(function(response) {
                 var result = response.message;
                 alert(result.toString());
+                location.reload();
             })
             .fail(function() {
                 console.log("error");

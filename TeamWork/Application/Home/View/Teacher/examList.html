@@ -49,7 +49,7 @@
             <div class="am-modal-hd">本次考试得分情况
                 <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
             </div>
-            <div class="am-u-sm-centered" id="examInfoContent" style="height:300px;width:500px;"></div>
+            <div class="am-u-sm-centered" id="examInfoContent" style="height:350px;width:500px;"></div>
         </div>
     </div>
 <include file="Index/footer"/>
@@ -176,7 +176,7 @@
         })
             .done(function(response){
                 var ydata = response.map(function(d) {
-                    return d.score;
+                    return parseInt(d.score);
                 });
                 var xdata = response.map(function(d) {
                     return d.student_name;
@@ -185,6 +185,15 @@
                 option = {
                     tooltip : {
                         trigger: 'axis'
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
                     },
                     calculable : true,
                     xAxis : [
@@ -209,10 +218,15 @@
                             data: ydata,
                             markPoint : {
                                 data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'}
+                                    {type : 'max', name: '最高分'},
+                                    {type : 'min', name: '最低分'}
                                 ]
                             },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均分'}
+                                ]
+                            }
                         }
                     ]
                 };

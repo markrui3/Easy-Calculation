@@ -65,6 +65,15 @@
             </div>
         </div>
     </div>
+
+    <div class="am-modal am-modal-no-btn" tabindex="-1" id="my-chart-modal">
+        <div class="am-modal-dialog">
+            <div class="am-modal-hd">学生各次考试得分情况
+                <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd" id="examInfoContent" style="height:350px;width:500px;"></div>
+        </div>
+    </div>
 <include file="Index/footer"/>
 
 <script type="text/javascript">
@@ -113,7 +122,7 @@
                             "targets": -1,
                             "data": null,
                             "render": function (data, type, row, table) {
-                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="letter(' + data + ')">' +  "通知" + '</button>';
+                                return '<button type="button" class="am-btn am-btn-primary" onclick="getStudentInfo(' + data + ')">' +  "查看学生" + '</button>  <button type="button" class="am-btn am-btn-secondary" onclick="getStudentChart(' + data + ')">' +  "统计图表" + '</button>  <button type="button" class="am-btn am-btn-success" onclick="letter(' + data + ')">' +  "通知" + '</button>';
                             }
                         }
                     ]
@@ -173,6 +182,88 @@
                 console.log("complete");
             });
     }
+
+    var myChart = echarts.init(document.getElementById('examInfoContent'));
+    function getStudentChart(student_id){
+        $.ajax({
+            url: '{:U("/Home/Teacher/getStudentInfo")}',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                student_id: student_id
+            }
+        })
+        .done(function(response){
+
+            var ydata = response.map(function(d) {
+                return parseInt(d.score);
+            });
+            console.log(ydata);
+            var xdata = response.map(function(d) {
+                return d.exam_id;
+            });
+            myChart.clear();
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : xdata
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        axisLabel : {
+                            formatter: '{value}分'
+                        }
+                    }
+                ],
+                series : [
+                    {
+                        name:'分数',
+                        type:'line',
+                        data: ydata,
+                        markPoint : {
+                            data : [
+                                {type : 'max', name: '最高分'},
+                                {type : 'min', name: '最低分'}
+                            ]
+                        },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均分'}
+                            ]
+                        }   
+                    }
+                ]
+            };
+            myChart.setOption(option);
+            $("#my-chart-modal").modal({
+                relatedTarget: this
+            });
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+    }
+
     var student_id = "";
     function letter(studentid){
         student_id = studentid;

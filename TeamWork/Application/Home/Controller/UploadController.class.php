@@ -19,7 +19,7 @@ class UploadController extends Controller {
           $question_content = array();
           foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row) {
               $line = $row->getRowIndex();
-              if($line < 2){
+              if($line < 1){
                   continue;
               }
 
