@@ -6,7 +6,7 @@ class IndexController extends Controller {
         $this->display('index');
     }
 
-    public function produceAnExpression($num=2,$sign=1){
+    public function produceAnExpression($num, $sign){
 
         $number=$num;//将$num保存下来，因为其在下面递归的时候要用到，同时下面执行过程中其值发生了变化.	
         //生成全部的运算数据
